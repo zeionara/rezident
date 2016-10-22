@@ -1,3 +1,17 @@
+code segment para 'code'
+    assume cs:code, ds:code, ss:code, es:code
+
+    org 100h
+main:
+    jmp init
+
+;
+; data
+;
+
+mes1 db ‘Program installed!$’			; сообщение при установке резидента
+mes2 db ‘Program already installed!$’	; сообщение при попытке повторной установки
+mes3 db ‘Program unload!$’			    ; сообщение при выгрузке программы
 
 ;
 ; обработчик прерывания от клавиатуры
@@ -44,14 +58,17 @@ rezoff:
     mov  ah,  49h
     int  21h
 
-    mov ah,09h		; функция вывода на экран
-    lea dx,mes3;	; DS:DX - адрес строки
-    int 21h
+    ;mov ah,09h		; функция вывода на экран
+    ;lea dx,mes3;	; DS:DX - адрес строки
+    ;int 21h
     
     pop dx
     pop es
     pop  ds
     iret
+
+    old_09h dd 0    ;старый обработчик 09h
+
 new_09h endp
 
 resident=$			; смещение конца резидентной части программы
@@ -68,8 +85,8 @@ init proc
 
     cmp al,0ffh		; программа установлена?
     je if_instaled		; если да, то перейти к выводу предупрежд. сообщения
-                            ; сохранить вектор 09h
-	mov ax,3509h			; функция получения вектора 09h
+                        ; сохранить вектор 09h
+	mov ax,3509h		; функция получения вектора 09h
 	int 21h
 
     mov word prt cs:old_09h,bx		; сохранить смещение системного обработчика
@@ -97,14 +114,7 @@ if_installed:
     mov ax,4c01h		; функция завершения с кодом возврата
     int 21h
 
-    ;
-    ; data
-    ;
-
-    mes1 db ‘Program installed!$’			; сообщение при установке резидента
-    mes2 db ‘Program already installed!$’	; сообщение при попытке повторной установки
-    mes3 db ‘Program unload!$’			    ; сообщение при выгрузке программы
-    unload db ‘un’
 init endp
+    stack dw 100 dup(?)
 code ends
 end main
