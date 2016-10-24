@@ -1,3 +1,17 @@
+delay  macro  t
+	local  m1, m2
+	
+	push  cx
+	mov  cx,  t
+	m1:  push  cx
+          mov  cx,  65535
+	m2:  loop m2
+         pop  cx
+         loop  m1
+	pop  cx
+endm
+
+
 code segment para 'code'    ;определение кодового сегмента
     assume cs:code, ds:code, ss:code, es:code
     
@@ -38,12 +52,28 @@ inst:
     iret			; выход из прерывания
 
 do_signal:
-    mov ah,02h
+    ;mov ah,02h
     push bx
-    xor bh,bh
+    ;xor bh,bh
     push dx
-    xor dx,dx
-    int 10h
+    ;xor dx,dx
+    ;int 10h
+
+
+	mov  al, 0b6h
+	out  43h,  al
+	mov  ax,  11930
+	out  42h, al
+	mov  al,  ah
+	out  42h,  al
+
+	in  al,  61h
+	or  al,  3h
+	out  61,  al
+	delay  40
+	and  al,  11111100b   ;  0fch
+	out  61h,  al
+
 
     pop dx
     pop bx
