@@ -58,15 +58,34 @@ do_signal:
     push dx
     ;xor dx,dx
     ;int 10h
+	;mov al,07d
+	;int 29h
+	;int 20h
+
+
+	mov  al, 0b6h
+	out  43h,  al
+	mov  ax,  5000
+	out  42h, al
+	mov  al,  ah
+	out  42h,  al
 
 	in  al,  61h
 	or  al,  3h
 	out  61h,  al
-	
-	delay  5
-	
+	delay  100
+	;push ax
+	;mov ah,01h
+	;int 21h
+	;mov al,07h
+	;int 29h
+	;int 20h
+
+
+	;pop ax
 	and  al,  11111100b   ;  0fch
 	out  61h,  al
+
 
     pop dx
     pop bx
