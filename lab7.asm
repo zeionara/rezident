@@ -59,21 +59,14 @@ do_signal:
     ;xor dx,dx
     ;int 10h
 
-
-	mov  al, 0b6h
-	out  43h,  al
-	mov  ax,  11930
-	out  42h, al
-	mov  al,  ah
-	out  42h,  al
-
 	in  al,  61h
 	or  al,  3h
-	out  61,  al
-	delay  40
+	out  61h,  al
+	
+	delay  5
+	
 	and  al,  11111100b   ;  0fch
 	out  61h,  al
-
 
     pop dx
     pop bx
